@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Red Stream - Contact Us</title>
+
+  <!-- favicon-->
+  <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+
+  <!--css-->
+  <link rel="stylesheet" href="./assets/css/style.css">
+  
+  <!-- google font link-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Roboto:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    .alert-msg {
+      padding: 12px;
+      border-radius: 5px;
+      margin-top: 10px;
+      display: none;
+      font-weight: bold;
+      text-align: center;
+    }
+    .alert-success { background: #d4edda; color: #155724; }
+    .alert-error { background: #f8d7da; color: #721c24; }
+  </style>
+
+</head>
+
+<body id="top">
+  <!-- HEADER-->
+  <header class="header">
+    <div class="header-top">
+      <div class="container">
+        <ul class="contact-list">
+          <li class="contact-item">
+            <ion-icon name="mail-outline"></ion-icon>
+            <a href="mailto:redstream001@gmail.com" class="contact-link">redstream001@gmail.com</a>
+          </li>
+          <li class="contact-item">
+            <ion-icon name="call-outline"></ion-icon>
+            <a href="tel:+917558951351" class="contact-link">+91-7558-951-351</a>
+          </li>
+        </ul>
+        <ul class="social-list">
+          <li><a href="#" class="social-link"><ion-icon name="logo-facebook"></ion-icon></a></li>
+          <li><a href="#" class="social-link"><ion-icon name="logo-instagram"></ion-icon></a></li>
+          <li><a href="#" class="social-link"><ion-icon name="logo-twitter"></ion-icon></a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="header-bottom" data-header>
+      <div class="container">
+        <a href="index.html" class="logo">Red Stream</a>
+        <nav class="navbar container" data-navbar>
+          <ul class="navbar-list">
+            <li><a href="index.html" class="navbar-link" data-nav-link>Home</a></li>
+            <li><a href="index.html#service" class="navbar-link" data-nav-link>Find donor</a></li>
+            <li><a href="about.html" class="navbar-link" data-nav-link>About Us</a></li>
+            <li><a href="contact.html" class="navbar-link" data-nav-link>Contact</a></li>
+          </ul>
+        </nav>
+        <a href="register.html" class="btn">Login / Register</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <article>
+      <section class="section hero" id="home" style="background-image: url('./assets/images/hero-bg.png')" aria-label="hero">
+        <div class="container">
+          <div class="hero-content">
+            <img src="assets/images/blood-icon.png" alt="ICON" width="70" height="70"> 
+            <p class="section-subtitle">Red Stream</p>
+            <h1 class="h1 hero-title">Contact Us</h1>
+            <h2 style="color: var(--royal-blue-light);">Address</h2>
+            <p class="hero-text">
+            Red Stream, Vaikom Road, Near Thalook Headquarters<br>
+            kottayam, Kerala, IN<br>
+            Pin 686141
+            </p>
+            <h2 style="color: var(--royal-blue-light);">Contact Details</h2>
+            <p class="hero-text">
+            MOBILE: +91 7558 9513 51 | TELEPHONE: 0484-292674<br>
+            EMAIL : redstream001@gmail.com<br>
+            </p>
+            <form id="subscribeForm" class="hero-form">
+              <input type="email" id="sub_email" name="email_address" aria-label="email" placeholder="Your Email Address..." required class="email-field">
+              <button type="submit" class="btn">Get Response Back</button>
+            </form>
+            <div id="subAlert" class="alert-msg"></div>
+          </div>
+          <figure class="hero-banner">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d245.76164524118906!2d76.39003912368983!3d9.750279515331268!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b08790da3aa8ec7%3A0x58b351f9df4075a3!2sBlood%20Storage%20Center!5e0!3m2!1sen!2sin!4v1689507408879!5m2!1sen!2sin" width="700" height="600" style="border:1;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </figure>
+        </div>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById('subscribeForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('sub_email').value;
+      const alertDiv = document.getElementById('subAlert');
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        alertDiv.className = 'alert-msg alert-success';
+        alertDiv.style.display = 'block';
+        alertDiv.textContent = data.message || 'Subscribed!';
+      } catch (err) {
+        alertDiv.className = 'alert-msg alert-error';
+        alertDiv.style.display = 'block';
+        alertDiv.textContent = 'Error connecting to server';
+      }
+    });
+  </script>
+
+  <script src="./assets/js/script.js" defer></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+</body>
+</html>
