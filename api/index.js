@@ -14,10 +14,20 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Connect to MongoDB Atlas
-connectDB();
+// DB Connection Middleware for Serverless
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+  } catch (err) {
+    console.error('DB Middleware Error:', err.message);
+  }
+  next();
+});
 
-// API Routes
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date() });
+});
 
 // Register endpoint
 app.post('/api/register', async (req, res) => {
@@ -26,6 +36,10 @@ app.post('/api/register', async (req, res) => {
       name, email, phone, password, bloodgroup, gender,
       birthdate, weight, state, zipcode, district, area, landmark
     } = req.body;
+
+    if (!email || !password || !name) {
+      return res.status(400).json({ success: false, message: 'Missing required fields' });
+    }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -50,8 +64,11 @@ app.post('/api/register', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: 'Email and password required' });
+    }
 
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ success: false, message: 'Incorrect email or password' });
     }
@@ -99,6 +116,10 @@ app.post('/api/contact', async (req, res) => {
 app.post('/api/subscribe', async (req, res) => {
   try {
     const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Email required' });
+    }
+
     const subscriber = new Subscriber({ email });
     await subscriber.save();
     res.json({ success: true, message: 'Subscribed successfully!' });
